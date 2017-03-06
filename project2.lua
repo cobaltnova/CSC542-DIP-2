@@ -1,8 +1,8 @@
 --[[
 
-  * * * * project1.lua * * * *
+  * * * * project2.lua * * * *
 
-Lua image processing program: program 1
+Lua image processing program: program 2
 
 Authors: Logan Lembke and Benjamin Garcia
 Class: CSC442/542 Digital Image Processing
