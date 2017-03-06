@@ -21,15 +21,23 @@ local hProc = require "histogramProc"
 -----------
 
 imageMenu("Point processes", {
-    {"Greyscale", pProc.greyscale},
-    {"Threshold", pProc.threshold, {{name = "threshold", type = "number", displaytype = "slider", default = 128, min = 0, max = 255}}},
+    {"Greyscale YIQ", il.grayscaleYIQ},
   }
 )
 
 imageMenu("Histogram processes", {
-    {"Display Histogram", il.showHistogram},
-    {"Auto Contrast Stretch", hProc.autoContrastStretch},
-    {"Histogram Equalization", hProc.histogramEqualization},
+    { "Display Histogram", il.showHistogram,
+      {{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "rgb"}, default = "yiq"}}},
+    {"Contrast Stretch", il.stretch, {cmarg2}},
+
+    {"Histogram Equalize", il.equalize,
+      {{name = "color model", type = "string", displaytype = "combo", choices = {"ihs", "yiq", "yuv", "rgb"}, default = "ihs"}}},
+  }
+)
+
+imageMenu("Segment", {
+    {"Binary Threshold", il.threshold,
+      {{name = "threshold", type = "number", displaytype = "slider", default = 128, min = 0, max = 255}}},
   }
 )
 
