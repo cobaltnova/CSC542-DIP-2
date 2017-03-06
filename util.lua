@@ -46,28 +46,32 @@ end
 
 --[[
   Run a correlation given a kernel and an image to run it on.
-  TODO: Determine if this function should be called with the
-  coordinates in the image, or if it should return a table of
-  return values. currently assuming 2-D array return.
 --]]
 function correlate(img, kernel, operation)
-  local output = {}
+  local newImage = img:clone()
   -- The bounds should prevent indexing past the edges of img.
-  for i = 0 + (kernel.height/2), img.height - (kernel.height/2) do
-    local row = {}
-    for j = 0 + (kernel.width/2), img.width - (kernel.width/2) do
-      row[j] = (
-        local value = 0
-        for k = 0, kernel.height do
-          for l = 0, kernel.width do
-            value += operation(kernel[k][l],
-              img[i-((kernel.height/2)-k)][j-((kernel.width/2)-l)])
+  for i = 0 + math.floor(kernel.height/2), img.height - math.floor(kernel.height/2) do
+    for j = 0 + math.floor(kernel.width/2), img.width - math.floor(kernel.width/2) do
+      -- map each pixel in newImage
+      newImage:mapPixels(
+        function (y, i, q)
+          local value = 0
+          for k = 0, kernel.height do
+            for l = 0, kernel.width do
+              -- value stores the intensity value that will be assigned to the pixel.
+              value = value + operation(
+                kernel:at(k,l).yiq[1],
+                img:at(i-(math.floor(kernel.height/2)-k),j-(math.floor(kernel.width/2)-l)).yiq[1]
+              )
+            end
           end
+          return y, value, q
         end
-        return value
       )
     end
-    output[i] = row
   end
-  return output
+  -- return the correlated image.
+  -- NOTE: the copy function I created does not currently copy the metatables, and also it only
+  -- copies key-value pairs, this may mean that nested objects are not correctly copied.
+  return newImage
 end
