@@ -71,7 +71,5 @@ function correlate(img, kernel, operation)
     end
   end
   -- return the correlated image.
-  -- NOTE: the copy function I created does not currently copy the metatables, and also it only
-  -- copies key-value pairs, this may mean that nested objects are not correctly copied.
   return newImage
 end
