@@ -59,13 +59,13 @@ function correlate(img, kernel, operation)
           for k = 0, kernel.height - 1 do
             for l = 0, kernel.width - 1 do
               -- value stores the intensity value that will be assigned to the pixel.
-              value = value + operation(
+              value = value + math.floor(operation(
                 kernel:at(k,l).yiq[1],
                 img:at(i-(math.floor(kernel.height/2)-k),j-(math.floor(kernel.width/2)-l)).yiq[1]
-              )
+              ))
             end
           end
-          return y, value, q
+          return y, clip(value, 0, 255), q
         end
       )
     end
