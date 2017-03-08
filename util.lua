@@ -50,24 +50,20 @@ end
 function correlate(img, kernel, operation)
   local newImage = img:clone()
   -- The bounds should prevent indexing past the edges of img.
-  for i = 0 + math.floor(kernel.height/2), img.height - math.floor(kernel.height/2) do
-    for j = 0 + math.floor(kernel.width/2), img.width - math.floor(kernel.width/2) do
+  for imrow = 0 + math.floor(kernel.height/2), img.height - 1 - math.floor(kernel.height/2) do
+    for imcolumn = 0 + math.floor(kernel.width/2), img.width - 1 - math.floor(kernel.width/2) do
       -- map each pixel in newImage
-      newImage:mapPixels(
-        function (y, i, q)
-          local value = 0
-          for k = 0, kernel.height - 1 do
-            for l = 0, kernel.width - 1 do
-              -- value stores the intensity value that will be assigned to the pixel.
-              value = value + math.floor(operation(
-                kernel:at(k,l).yiq[1],
-                img:at(i-(math.floor(kernel.height/2)-k),j-(math.floor(kernel.width/2)-l)).yiq[1]
-              ))
-            end
-          end
-          return y, clip(value, 0, 255), q
+      local value = 0
+      for kernelrow = 0, (kernel.height - 1) do
+        for kernelcolumn = 0, (kernel.width - 1) do
+          -- value stores the intensity value that will be assigned to the pixel.
+          value = value + math.floor(operation(
+              kernel[kernelrow][kernelcolumn],
+              img:at(imrow-(math.floor(kernel.height/2)-kernelrow),imcolumn-(math.floor(kernel.width/2)-kernelcolumn)).yiq[0]
+            ))
         end
-      )
+      end
+      newImage:at(imrow,imcolumn).yiq[0] = clip(value, 0, 255)
     end
   end
   -- return the correlated image.
