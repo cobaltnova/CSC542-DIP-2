@@ -56,8 +56,8 @@ function correlate(img, kernel, operation)
       newImage:mapPixels(
         function (y, i, q)
           local value = 0
-          for k = 0, kernel.height do
-            for l = 0, kernel.width do
+          for k = 0, kernel.height - 1 do
+            for l = 0, kernel.width - 1 do
               -- value stores the intensity value that will be assigned to the pixel.
               value = value + operation(
                 kernel:at(k,l).yiq[1],
