@@ -5,11 +5,12 @@
 require "util"
 require "ip"
 local il = require "il"
-local tim = require "createImage"
+local cim = require "createImage"
+local cke = require "createKernel"
 
 function smoothingTest()
-  local smoothFilter = tim.smoothingFilter()
-  local im = tim.smallPlus()
+  local smoothFilter = cke.smoothingFilter()
+  local im = cim.smallPlus()
   im:write("testSmoothSmallPlusBefore.bmp")
   il.RGB2YIQ(im)
   im:write("afterRGB2YIQ.bmp")
