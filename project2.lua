@@ -14,8 +14,7 @@ Date: Spring 2017
 require "ip"   -- this loads the packed distributable
 local viz = require "visual"
 local il = require "il"
-local pProc = require "pointProc"
-local hProc = require "histogramProc"
+local rankOrder = require "rankOrderProc"
 -----------
 -- menus --
 -----------
@@ -33,6 +32,12 @@ imageMenu("Histogram processes", {
     {"Histogram Equalize", il.equalize,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"ihs", "yiq", "yuv", "rgb"}, default = "ihs"}}},
 
+  }
+)
+
+imageMenu("Neighborhood processes", {
+    {"NxN Median Filter", rankOrder.medianFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
   }
 )
 
