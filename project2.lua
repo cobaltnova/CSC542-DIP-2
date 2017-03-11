@@ -19,25 +19,35 @@ local hProc = require "histogramProc"
 -----------
 -- menus --
 -----------
+local cmarg2 = {name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}
 
 imageMenu("Point processes", {
-    {"Greyscale YIQ", il.grayscaleYIQ},
+    {"Grayscale YIQ\tCtrl-M", il.grayscaleYIQ, hotkey = "C-M"},
   }
 )
 
 imageMenu("Histogram processes", {
-    { "Display Histogram", il.showHistogram,
+    {"Display Histogram", il.showHistogram,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "rgb"}, default = "yiq"}}},
     {"Contrast Stretch", il.stretch, {cmarg2}},
 
     {"Histogram Equalize", il.equalize,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"ihs", "yiq", "yuv", "rgb"}, default = "ihs"}}},
+
   }
 )
 
 imageMenu("Segment", {
     {"Binary Threshold", il.threshold,
       {{name = "threshold", type = "number", displaytype = "slider", default = 128, min = 0, max = 255}}},
+  }
+)
+
+imageMenu("Misc.", {
+    {"Impulse Noise", il.impulseNoise,
+      {{name = "probability", type = "number", displaytype = "slider", default = 64, min = 0, max = 1000}}},
+    {"Gaussian noise", il.gaussianNoise,
+      {{name = "sigma", type = "number", displaytype = "textbox", default = "16.0"}}},
   }
 )
 
