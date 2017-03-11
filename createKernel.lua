@@ -4,6 +4,20 @@
 --]]
 
 --[[
+  create an nxn mean filter based on user input.
+--]]
+function meanFilter(n)
+  local filter = {}
+  for i = 0, n do
+    filter[i] = {}
+    for j = 0, n do
+      filter[i][j] = 1/(n*n)
+    end
+  end
+  return filter
+end
+
+--[[
   create a 3x3 smoothing filter.
 --]]
 function smoothingFilter()
