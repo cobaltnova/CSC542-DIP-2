@@ -4,9 +4,9 @@
 --]]
 
 --[[
-  create an nxn median filter based on user input.
+  create an nxn filter filled with 1s based on user input.
 --]]
-function medianFilter(n)
+function oneFilter(n)
   local filter = {}
   for i = 0, n do
     filter[i] = {}
@@ -98,7 +98,7 @@ function medianPlusFilter()
 end
 
 return {
-  medianFilter = medianFilter,
+  oneFilter = oneFilter,
   meanFilter = meanFilter,
   smoothingFilter=smoothingFilter,
   sharpeningFilter=sharpeningFilter,
