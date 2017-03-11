@@ -4,6 +4,20 @@
 --]]
 
 --[[
+  create an nxn median filter based on user input.
+--]]
+function medianFilter(n)
+  local filter = {}
+  for i = 0, n do
+    filter[i] = {}
+    for j = 0, n do
+      filter[i][j] = 1
+    end
+  end
+  return filter
+end
+
+--[[
   create an nxn mean filter based on user input.
 --]]
 function meanFilter(n)
@@ -39,6 +53,9 @@ function smoothingFilter()
   return filter
 end
 
+--[[
+  create a 3x3 sharpening filter.
+--]]
 function sharpeningFilter()
   local filter = {}
   filter[0] = {}
@@ -58,6 +75,9 @@ function sharpeningFilter()
   return filter
 end
 
+--[[
+  create a 3x3 plus-shaped median filter.
+--]]
 function medianPlusFilter()
   local filter = {}
   filter[0] = {}
@@ -78,5 +98,9 @@ function medianPlusFilter()
 end
 
 return {
-  smoothingFilter=smoothingFilter
+  medianFilter = medianFilter,
+  meanFilter = meanFilter,
+  smoothingFilter=smoothingFilter,
+  sharpeningFilter=sharpeningFilter,
+  medianPlusFilter=medianPlusFilter
 }
