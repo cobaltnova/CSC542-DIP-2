@@ -19,7 +19,6 @@ local hProc = require "histogramProc"
 -----------
 -- menus --
 -----------
-local cmarg2 = {name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}
 
 imageMenu("Point processes", {
     {"Grayscale YIQ\tCtrl-M", il.grayscaleYIQ, hotkey = "C-M"},
@@ -29,7 +28,7 @@ imageMenu("Point processes", {
 imageMenu("Histogram processes", {
     {"Display Histogram", il.showHistogram,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "rgb"}, default = "yiq"}}},
-    {"Contrast Stretch", il.stretch, {cmarg2}},
+    {"Contrast Stretch", il.stretch, {{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
 
     {"Histogram Equalize", il.equalize,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"ihs", "yiq", "yuv", "rgb"}, default = "ihs"}}},
