@@ -8,6 +8,10 @@ local il = require "il"
 local cim = require "createImage"
 local cke = require "createKernel"
 
+--[[
+  create a sample image and run a smoothing
+  operation on it.
+--]]
 function smoothingTest()
   local smoothFilter = cke.smoothingFilter()
   local im = cim.smallPlus()
@@ -23,4 +27,25 @@ function smoothingTest()
   im:write("testSmoothSmallPlusAfter.bmp")
 end
 
+-- run the smoothing test.
 smoothingTest()
+
+--[[
+  using the smoothed image from the smoothing test to sharpen.
+  Two of the images are the same as the after images from
+  the smoothing test.
+--]]
+function sharpeningTest()
+  local sharpFilter = cke.sharpeningFilter()
+  local im = image.open("testSmoothSmallPlusAfter.bmp")
+  il.RGB2YIQ(im)
+  local operation = function (kernelValue, imageValue)
+    return kernelValue*imageValue
+  end
+  im = correlate(im, sharpFilter, operation)
+  im:write("sharpenBeforeReconvert.bmp")
+  il.YIQ2RGB(im)
+  im:write("testSharpenSmallPlusAfter.bmp")
+end
+
+sharpeningTest()
