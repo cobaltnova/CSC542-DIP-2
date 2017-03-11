@@ -47,7 +47,7 @@ end
 --[[
   Run a correlation given a kernel and an image to run it on.
 --]]
-function correlate(img, kernel, operation)
+function correlate(img, kernel)
   local newImage = img:clone()
   -- The bounds should prevent indexing past the edges of img.
   for imrow = 0 + math.floor(kernel.height/2), img.height - 1 - math.floor(kernel.height/2) do
@@ -57,10 +57,10 @@ function correlate(img, kernel, operation)
       for kernelrow = 0, (kernel.height - 1) do
         for kernelcolumn = 0, (kernel.width - 1) do
           -- value stores the intensity value that will be assigned to the pixel.
-          value = value + math.floor(operation(
-              kernel[kernelrow][kernelcolumn],
-              img:at(imrow-(math.floor(kernel.height/2)-kernelrow),imcolumn-(math.floor(kernel.width/2)-kernelcolumn)).yiq[0]
-            ))
+          value = value + math.floor(
+            kernel[kernelrow][kernelcolumn]*
+            img:at(imrow-(math.floor(kernel.height/2)-kernelrow),imcolumn-(math.floor(kernel.width/2)-kernelcolumn)).yiq[0]
+          )
         end
       end
       newImage:at(imrow,imcolumn).yiq[0] = clip(value, 0, 255)

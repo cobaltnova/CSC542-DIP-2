@@ -18,10 +18,7 @@ function smoothingTest()
   im:write("testSmoothSmallPlusBefore.bmp")
   il.RGB2YIQ(im)
   im:write("afterRGB2YIQ.bmp")
-  local operation = function (kernelValue, imageValue)
-    return kernelValue*imageValue
-  end
-  im = correlate(im, smoothFilter, operation)
+  im = correlate(im, smoothFilter)
   im:write("beforeReconvert.bmp")
   il.YIQ2RGB(im)
   im:write("testSmoothSmallPlusAfter.bmp")
@@ -39,10 +36,7 @@ function sharpeningTest()
   local sharpFilter = cke.sharpeningFilter()
   local im = image.open("testSmoothSmallPlusAfter.bmp")
   il.RGB2YIQ(im)
-  local operation = function (kernelValue, imageValue)
-    return kernelValue*imageValue
-  end
-  im = correlate(im, sharpFilter, operation)
+  im = correlate(im, sharpFilter)
   im:write("sharpenBeforeReconvert.bmp")
   il.YIQ2RGB(im)
   im:write("testSharpenSmallPlusAfter.bmp")
