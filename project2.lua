@@ -36,6 +36,7 @@ imageMenu("Histogram processes", {
 )
 
 imageMenu("Neighborhood processes", {
+    {"Median Plus Filter", rankOrder.medianPlusFilter},
     {"NxN Median Filter", rankOrder.medianFilter,
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
     {"NxN Mean Filter", rankOrder.meanFilter,

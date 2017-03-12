@@ -127,6 +127,13 @@ local function roMedianFilter(img, n)
   return img
 end
 
+local function roMedianPlusFilter(img)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.medianPlusFilter(), roMedian)
+  il.YIQ2RGB(img)
+  return img
+end
+
 local function roMinFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMin)
@@ -152,6 +159,7 @@ return {
   meanFilter=roMeanFilter,
   stdDevFilter=roStdDevFilter,
   medianFilter=roMedianFilter,
+  medianPlusFilter=roMedianPlusFilter,
   minFilter=roMinFilter,
   maxFilter=roMaxFilter,
   rangeFilter=roRangeFilter,
