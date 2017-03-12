@@ -4,12 +4,13 @@
 --]]
 require "ip"
 require "util"
-
+local il = require "il"
+local cke = require "createKernel"
 
 --[[
   Run a correlation given a kernel and an image to run it on.
 --]]
-function correlate(img, kernel)
+function cCorrelate(img, kernel)
   local newImage = img:clone()
   -- kernelCenter maps (1,2) -> 0, (3,4) -> 1, (5,6) -> 2 ...
   -- this works if we choose upper left for the kernel center for even kernels
@@ -40,3 +41,22 @@ function correlate(img, kernel)
   -- return the correlated image.
   return newImage
 end
+
+--[[
+  smooth the image using a 3x3 smoothing filter.
+--]]
+function cSmoothFilter(img)
+  return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.smoothingFilter()))
+end
+
+--[[
+  sharpen the image using a 3x3 sharpening filter.
+--]]
+function cSharpenFilter(img)
+  return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.sharpeningFilter()))
+end
+
+return {
+  sharpen = cSharpenFilter,
+  smooth = cSmoothFilter
+  }

@@ -15,6 +15,7 @@ require "ip"   -- this loads the packed distributable
 local viz = require "visual"
 local il = require "il"
 local rankOrder = require "rankOrderProc"
+local correlate = require "correlateProc"
 -----------
 -- menus --
 -----------
@@ -35,6 +36,13 @@ imageMenu("Histogram processes", {
   }
 )
 
+imageMenu("Weiss processes", {
+    {"Weiss smooth", il.smooth},
+    {"Weiss sharpen", il.sharpen},
+    {"Weiss abs-sharpen", il.sharpenAbs} 
+  }
+)
+
 imageMenu("Neighborhood processes", {
     {"Median Plus Filter", rankOrder.medianPlusFilter},
     {"NxN Median Filter", rankOrder.medianFilter,
@@ -49,6 +57,8 @@ imageMenu("Neighborhood processes", {
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
     {"NxN Range Filter", rankOrder.rangeFilter,
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"3x3 Smooth Filter", correlate.smooth},
+    {"3x3 Sharpen Filter", correlate.sharpen}
   }
 )
 
