@@ -46,7 +46,8 @@ imageMenu("Weiss processes", {
     {"Kirsch Edge Mag/Dir", il.kirsch},
     {"Weiss posterize", il.posterize, {{name = "n", type = "number", displaytype = "spin", default = 8},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
     {"Weiss brighten", il.brighten, {{name = "amount", type = "number", displaytype = "spin", default = 50},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
-    {"Weiss emboss", il.emboss}
+    {"Weiss emboss", il.emboss},
+    {"Weiss laplacian", il.laplacian}
   }
 )
 
@@ -73,7 +74,8 @@ imageMenu("Neighborhood processes", {
 imageMenu("Edge Detection", {
     {"Sobel Direction", correlate.sobelDir},
     {"Sobel Magnitude", correlate.sobelMag},
-    {"Kirsch Edge Magnitude", correlate.kirschMagnitude}
+    {"Kirsch Edge Magnitude", correlate.kirschMagnitude},
+    {"Laplacian Edge Magnitude", correlate.laplacian}
   }
 )
 

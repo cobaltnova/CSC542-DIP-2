@@ -157,6 +157,19 @@ function embossFilter()
   return filter
 end
 
+--[[
+  create a 3x3 laplacian filter.
+--]]
+function laplacianFilter()
+  local filter = {
+    {0,-1,0},
+    {-1,4,-1},
+    {0,-1,0}
+  }
+  filter.size = 3
+  return filter
+end
+
 return {
   kirsch = kirschKernels,
   oneFilter = oneFilter,
@@ -166,5 +179,6 @@ return {
   medianPlusFilter = medianPlusFilter,
   sobelX = sobelX,
   sobelY = sobelY,
-  embossFilter = embossFilter
+  embossFilter = embossFilter,
+  laplacianFilter = laplacianFilter
 }

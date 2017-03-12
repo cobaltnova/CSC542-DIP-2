@@ -183,8 +183,22 @@ function cKirschMagnitude(img)
   return newImg
 end
 
+--[[
+  apply a 3x3 embossing filter to the image.
+--]]
 function cEmboss(img)
   return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.embossFilter()))
+end
+
+--[[
+  apply a smoothing filter to the image, then apply the laplacian
+  filter to the image. This will produce an image of edges from
+  the smoothed image.
+--]]
+function cLaplacian(img)
+  -- the 3x3 smoothing filter is approximately Gaussian
+  img = cCorrelate(il.RGB2YIQ(img), cke.smoothingFilter())
+  return il.stretch(il.YIQ2RGB(cCorrelate(img, cke.laplacianFilter())), "yiq")
 end
 
 return {
@@ -193,5 +207,6 @@ return {
   sobelDir = cSobelDir,
   sobelMag = cSobelMag,
   kirschMagnitude = cKirschMagnitude,
-  emboss = cEmboss
+  emboss = cEmboss,
+  laplacian = cLaplacian
 }
