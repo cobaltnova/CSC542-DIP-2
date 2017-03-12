@@ -131,6 +131,16 @@ function sobelX()
   return filter
 end
 
+function sobelX2()
+  local filter = {
+    {1,2,1},
+    {0,0,0},
+    {-1,-2,-1}
+  }
+  filter.size = 3
+  return filter
+end
+
 --[[
   create a 3x3 sobel filter to find vertical edges.
 --]]
@@ -144,6 +154,16 @@ function sobelY()
   return filter
 end
 
+function sobelY2()
+  local filter = {
+    {1,0,-1},
+    {2,0,-2},
+    {1,0,-1}
+  }
+  filter.size = 3
+  return filter
+end
+
 return {
   kirsch = kirschKernels,
   oneFilter = oneFilter,
@@ -152,5 +172,7 @@ return {
   sharpeningFilter = sharpeningFilter,
   medianPlusFilter = medianPlusFilter,
   sobelX = sobelX,
-  sobelY = sobelY
+  sobelY = sobelY,
+  sobelX2 = sobelX2,
+  sobelY2 = sobelY2
 }

@@ -65,17 +65,25 @@ end
 function cSobel(img)
   local gray = il.grayscaleYIQ(img:clone())
   local magX = gray:clone()
+  local magX2 = gray:clone()
   local magY = gray:clone()
+  local magY2 = gray:clone()
   local mag = gray:clone()
   local dir = gray:clone()
   -- convert magX and magY to yiq for the correlation,
   -- they will be left like this to calculate mag.
   magX = cCorrelate(il.RGB2YIQ(magX), cke.sobelX())
+  magX2 = cCorrelate(il.RGB2YIQ(magX2), cke.sobelX2())
   magY = cCorrelate(il.RGB2YIQ(magY), cke.sobelY())
+  magY2 = cCorrelate(il.RGB2YIQ(magY2), cke.sobelY2())
   il.RGB2YIQ(mag)
   il.RGB2YIQ(dir)
   for row=0, img.height - 1 do
     for col=0, img.width - 1 do
+      magX:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
+        + math.abs(magX2:at(row,col).yiq[0]), 0, 255)
+      magY:at(row,col).yiq[0] = clip(math.abs(magY:at(row,col).yiq[0])
+        + math.abs(magY2:at(row,col).yiq[0]), 0, 255)
       mag:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
         + math.abs(magY:at(row,col).yiq[0]), 0, 255)
       dir:at(row,col).yiq[0] = clip(math.atan2(magX:at(row,col).yiq[0], magY:at(row,col).yiq[0]), 0, 255)

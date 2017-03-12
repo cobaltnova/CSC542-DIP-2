@@ -42,7 +42,12 @@ imageMenu("Weiss processes", {
     {"Weiss abs-sharpen", il.sharpenAbs},
     {"Weiss sobelMag", il.sobelMag},
     {"Weiss sobel", il.sobel},
+<<<<<<< Updated upstream
     {"Kirsch Edge Mag/Dir", il.kirsch},
+=======
+    {"Weiss posterize", il.posterize, {{name = "n", type = "number", displaytype = "spin", default = 8},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
+    {"Weiss brighten", il.brighten, {{name = "amount", type = "number", displaytype = "spin", default = 50},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}}
+>>>>>>> Stashed changes
   }
 )
 
