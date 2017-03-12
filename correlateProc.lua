@@ -156,11 +156,12 @@ function cKirschMagnitude(img)
   --img = cSmoothFilter(img)
   local newImg = image.flat(img.width, img.height, 0)
 
-  il.RGB2YIQ(img)  
+  il.RGB2YIQ(img)
   il.RGB2YIQ(newImg)
 
   local kernels = cke.kirsch
-  images = {}
+  --changed this to a local
+  local images = {}
   for k, v in ipairs(kernels) do
     table.insert(images, cCorrelate(img, v))
   end
@@ -182,10 +183,15 @@ function cKirschMagnitude(img)
   return newImg
 end
 
+function cEmboss(img)
+  return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.embossFilter()))
+end
+
 return {
   sharpen = cSharpenFilter,
   smooth = cSmoothFilter,
   sobelDir = cSobelDir,
   sobelMag = cSobelMag,
   kirschMagnitude = cKirschMagnitude,
+  emboss = cEmboss
 }

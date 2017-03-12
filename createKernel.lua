@@ -144,6 +144,19 @@ function sobelY()
   return filter
 end
 
+--[[
+  create a 3x3 embossing filter.
+--]]
+function embossFilter()
+  local filter = {
+    {-1,-1,0},
+    {-1,0,1},
+    {0,1,1}
+  }
+  filter.size = 3
+  return filter
+end
+
 return {
   kirsch = kirschKernels,
   oneFilter = oneFilter,
@@ -153,6 +166,5 @@ return {
   medianPlusFilter = medianPlusFilter,
   sobelX = sobelX,
   sobelY = sobelY,
-  sobelX2 = sobelX2,
-  sobelY2 = sobelY2
+  embossFilter = embossFilter
 }

@@ -45,7 +45,8 @@ imageMenu("Weiss processes", {
     {"Weiss sobel", il.sobel},
     {"Kirsch Edge Mag/Dir", il.kirsch},
     {"Weiss posterize", il.posterize, {{name = "n", type = "number", displaytype = "spin", default = 8},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
-    {"Weiss brighten", il.brighten, {{name = "amount", type = "number", displaytype = "spin", default = 50},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}}
+    {"Weiss brighten", il.brighten, {{name = "amount", type = "number", displaytype = "spin", default = 50},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
+    {"Weiss emboss", il.emboss}
   }
 )
 
@@ -64,14 +65,15 @@ imageMenu("Neighborhood processes", {
     {"NxN Range Filter", rankOrder.rangeFilter,
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
     {"3x3 Smooth Filter", correlate.smooth},
-    {"3x3 Sharpen Filter", correlate.sharpen}
+    {"3x3 Sharpen Filter", correlate.sharpen},
+    {"3x3 Emboss Filter", correlate.emboss}
   }
 )
 
 imageMenu("Edge Detection", {
     {"Sobel Direction", correlate.sobelDir},
     {"Sobel Magnitude", correlate.sobelMag},
-    {"Kirsch Edge Magnitude", correlate.kirschMagnitude},
+    {"Kirsch Edge Magnitude", correlate.kirschMagnitude}
   }
 )
 
