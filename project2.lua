@@ -22,6 +22,7 @@ local correlate = require "correlateProc"
 
 imageMenu("Point processes", {
     {"Grayscale YIQ\tCtrl-M", il.grayscaleYIQ, hotkey = "C-M"},
+    {"Posterize", il.posterize, {{name = "levels", type = "number", displaytype = "spin", default = 4, min = 2, max = 64}, cmarg1}},
   }
 )
 
