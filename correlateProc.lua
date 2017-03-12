@@ -44,6 +44,47 @@ function cCorrelate(img, kernel)
 end
 
 --[[
+  Run a correlation given a kernel and an image to run it on. Store the output
+  in a table rather than an image to hold HDR data
+--]]
+function cCorrelateHDR(img, kernel)
+  --build a table to hold our output
+  local newImage = {}
+  for i=0, img.height - 1 do
+    newImage[i] = {}
+  end
+  
+  -- kernelCenter maps (1,2) -> 0, (3,4) -> 1, (5,6) -> 2 ...
+  -- this works if we choose upper left for the kernel center for even kernels
+  local kernelCenter = math.floor((kernel.size - 1)/ 2)
+
+  -- if the kernel is even sized, then looping stops 1 pixel early in both directions
+  local evenOddCorrection = kernel.size % 2 == 0 and 1 or 0
+
+  -- The bounds should prevent indexing past the edges of img.
+  -- the -1 is added because images are zero indexed, and lua's for is inclusive
+  for imrow = kernelCenter, img.height - kernelCenter - evenOddCorrection - 1 do
+    for imcolumn = kernelCenter, img.width - kernelCenter - evenOddCorrection - 1 do
+      -- map each pixel in newImage
+      local value = 0
+      for kernelrow = 0, kernel.size - 1 do
+        for kernelcolumn = 0, kernel.size - 1 do
+          -- value stores the intensity value that will be assigned to the pixel.
+          -- kernel is 1 based but the image is not, the +1 adjusts for this.
+          value = value + math.floor(
+            kernel[kernelrow+1][kernelcolumn+1]*
+            img:at(imrow-kernelCenter+kernelrow,imcolumn-kernelCenter+kernelcolumn).yiq[0]
+          )
+        end
+      end
+      newImage[imrow][imcolumn] = value
+    end
+  end
+  -- return the correlated image. 
+  return newImage
+end
+
+--[[
   smooth the image using a 3x3 smoothing filter.
 --]]
 function cSmoothFilter(img)
@@ -102,18 +143,19 @@ end
   first, and the original is not returned.
 --]]
 function cSobelMag(img)
-  local magX = img:clone()
-  local magY = img:clone()
-  local mag = img:clone()
-  -- convert magX and magY to yiq for the correlation,
-  -- they will be left like this to calculate mag.
-  magX = cCorrelate(il.RGB2YIQ(magX), cke.sobelX())
-  magY = cCorrelate(il.RGB2YIQ(magY), cke.sobelY())
+  local mag = image.flat(img.width, img.height, 0)
   il.RGB2YIQ(mag)
-  for row=0, img.height - 1 do
-    for col=0, img.width - 1 do
-      mag:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
-        + math.abs(magY:at(row,col).yiq[0]), 0, 255)
+  local magX = cCorrelateHDR(il.RGB2YIQ(img), cke.sobelX())
+  local magY = cCorrelateHDR(il.RGB2YIQ(img), cke.sobelY())
+  local intensityX
+  local intensityY
+  for r=1, img.height - 2 do
+    for c=1, img.width - 2 do
+      intensityX = magX[r][c]
+      intensityY = magY[r][c]
+      mag:at(r,c).yiq[0] = clip(
+        math.sqrt(intensityX * intensityX + intensityY * intensityY), 0, 255
+      )
     end
   end
   il.YIQ2RGB(mag)
