@@ -69,8 +69,8 @@ imageMenu("Neighborhood processes", {
 )
 
 imageMenu("Edge Detection", {
-    {"Sobel", correlate.sobel},
-    {"SobelMag", correlate.sobelMag},
+    {"Sobel Direction", correlate.sobelDir},
+    {"Sobel Magnitude", correlate.sobelMag},
     {"Kirsch Edge Magnitude", correlate.kirschMagnitude},
   }
 )

@@ -103,37 +103,27 @@ end
   to match Weiss' example, return the original, the magnitude,
   and the direction.
 --]]
-function cSobel(img)
-  local gray = il.grayscaleYIQ(img:clone())
-  local magX = gray:clone()
-  local magX2 = gray:clone()
-  local magY = gray:clone()
-  local magY2 = gray:clone()
-  local mag = gray:clone()
-  local dir = gray:clone()
-  -- convert magX and magY to yiq for the correlation,
-  -- they will be left like this to calculate mag.
-  magX = cCorrelate(il.RGB2YIQ(magX), cke.sobelX())
-  magX2 = cCorrelate(il.RGB2YIQ(magX2), cke.sobelX2())
-  magY = cCorrelate(il.RGB2YIQ(magY), cke.sobelY())
-  magY2 = cCorrelate(il.RGB2YIQ(magY2), cke.sobelY2())
-  il.RGB2YIQ(mag)
-  il.RGB2YIQ(dir)
-  for row=0, img.height - 1 do
-    for col=0, img.width - 1 do
-      magX:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
-        + math.abs(magX2:at(row,col).yiq[0]), 0, 255)
-      magY:at(row,col).yiq[0] = clip(math.abs(magY:at(row,col).yiq[0])
-        + math.abs(magY2:at(row,col).yiq[0]), 0, 255)
-      mag:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
-        + math.abs(magY:at(row,col).yiq[0]), 0, 255)
-      dir:at(row,col).yiq[0] = clip(math.atan2(magX:at(row,col).yiq[0], magY:at(row,col).yiq[0]), 0, 255)
+function cSobelDir(img)
+  local ang = image.flat(img.width, img.height, 0)
+  il.RGB2YIQ(ang)
+  local magX = cCorrelateHDR(il.RGB2YIQ(img), cke.sobelX())
+  local magY = cCorrelateHDR(il.RGB2YIQ(img), cke.sobelY())
+  local intensityX
+  local intensityY
+  for r=1, img.height - 2 do
+    for c=1, img.width - 2 do
+      intensityX = magX[r][c]
+      intensityY = magY[r][c]
+      angle = math.atan2(intensityY, intensityX)
+      if (angle < 0) then
+        angle = angle + 2 * math.pi
+      end
+      
+      ang:at(r,c).yiq[0]=clip((255 / (2 * math.pi)) * angle, 0, 255)      
     end
   end
-  il.YIQ2RGB(mag)
-  il.YIQ2RGB(dir)
-  il.stretch(dir,"yiq")
-  return img, mag, dir
+  il.YIQ2RGB(ang)
+  return ang
 end
 
 --[[
@@ -195,7 +185,7 @@ end
 return {
   sharpen = cSharpenFilter,
   smooth = cSmoothFilter,
-  sobel = cSobel,
+  sobelDir = cSobelDir,
   sobelMag = cSobelMag,
   kirschMagnitude = cKirschMagnitude,
 }
