@@ -56,7 +56,64 @@ function cSharpenFilter(img)
   return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.sharpeningFilter()))
 end
 
+--[[
+  use the sobel gradient filter to determine edges in the image.
+  to match Weiss' example, return the original, the magnitude,
+  and the direction.
+--]]
+function cSobel(img)
+  local gray = il.grayscaleYIQ(img:clone())
+  local magX = gray:clone()
+  local magY = gray:clone()
+  local mag = gray:clone()
+  local dir = gray:clone()
+  -- convert magX and magY to yiq for the correlation,
+  -- they will be left like this to calculate mag.
+  magX = cCorrelate(il.RGB2YIQ(magX), cke.sobelX())
+  magY = cCorrelate(il.RGB2YIQ(magY), cke.sobelY())
+  il.RGB2YIQ(mag)
+  il.RGB2YIQ(dir)
+  for row=0, img.height - 1 do
+    for col=0, img.width - 1 do
+      mag:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
+        + math.abs(magY:at(row,col).yiq[0]), 0, 255)
+      dir:at(row,col).yiq[0] = clip(math.atan2(magX:at(row,col).yiq[0], magY:at(row,col).yiq[0]), 0, 255)
+    end
+  end
+  il.YIQ2RGB(mag)
+  il.YIQ2RGB(dir)
+  il.stretch(dir,"yiq")
+  return img, mag, dir
+end
+
+--[[
+  use the sobel gradient filter to determine edges in the image,
+  returning only the magnitude of the edges.
+  to match Weiss' example, the image is not converted to grayscale
+  first, and the original is not returned.
+--]]
+function cSobelMag(img)
+  local magX = img:clone()
+  local magY = img:clone()
+  local mag = img:clone()
+  -- convert magX and magY to yiq for the correlation,
+  -- they will be left like this to calculate mag.
+  magX = cCorrelate(il.RGB2YIQ(magX), cke.sobelX())
+  magY = cCorrelate(il.RGB2YIQ(magY), cke.sobelY())
+  il.RGB2YIQ(mag)
+  for row=0, img.height - 1 do
+    for col=0, img.width - 1 do
+      mag:at(row,col).yiq[0] = clip(math.abs(magX:at(row,col).yiq[0])
+        + math.abs(magY:at(row,col).yiq[0]), 0, 255)
+    end
+  end
+  il.YIQ2RGB(mag)
+  return mag
+end
+
 return {
   sharpen = cSharpenFilter,
-  smooth = cSmoothFilter
-  }
+  smooth = cSmoothFilter,
+  sobel = cSobel,
+  sobelMag = cSobelMag
+}

@@ -39,7 +39,9 @@ imageMenu("Histogram processes", {
 imageMenu("Weiss processes", {
     {"Weiss smooth", il.smooth},
     {"Weiss sharpen", il.sharpen},
-    {"Weiss abs-sharpen", il.sharpenAbs} 
+    {"Weiss abs-sharpen", il.sharpenAbs},
+    {"Weiss sobelMag", il.sobelMag},
+    {"Weiss sobel", il.sobel}
   }
 )
 
@@ -59,6 +61,12 @@ imageMenu("Neighborhood processes", {
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
     {"3x3 Smooth Filter", correlate.smooth},
     {"3x3 Sharpen Filter", correlate.sharpen}
+  }
+)
+
+imageMenu("Edge Detection", {
+    {"Sobel", correlate.sobel},
+    {"SobelMag", correlate.sobelMag}
   }
 )
 

@@ -112,11 +112,39 @@ function medianPlusFilter()
   return filter
 end
 
+--[[
+  create a 3x3 sobel filter to find horizontal edges.
+--]]
+function sobelX()
+  local filter = {
+    {-1,-2,-1},
+    {0,0,0},
+    {1,2,1}
+  }
+  filter.size = 3
+  return filter
+end
+
+--[[
+  create a 3x3 sobel filter to find vertical edges.
+--]]
+function sobelY()
+  local filter = {
+    {-1,0,1},
+    {-2,0,2},
+    {-1,0,1}
+  }
+  filter.size = 3
+  return filter
+end
+
 return {
   kirsch = kirsch,
   oneFilter = oneFilter,
   meanFilter = meanFilter,
-  smoothingFilter=smoothingFilter,
-  sharpeningFilter=sharpeningFilter,
-  medianPlusFilter=medianPlusFilter
+  smoothingFilter = smoothingFilter,
+  sharpeningFilter = sharpeningFilter,
+  medianPlusFilter = medianPlusFilter,
+  sobelX = sobelX,
+  sobelY = sobelY
 }
