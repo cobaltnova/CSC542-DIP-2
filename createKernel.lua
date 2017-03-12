@@ -7,41 +7,47 @@
   possible kirsch kernels.
 --]]
 local kirschKernels = {
-  {{-3,-3,-3},
-    {-3,0,-3},
-    {5,5,5}},
-  {{-3,-3,-3},
-    {5,0,-3},
-    {5,5,-3}},
-  {{5,-3,-3},
-    {5,0,-3},
-    {5,-3,-3}},
-  {{5,5,-3},
-    {5,0,-3},
-    {-3,-3,-3}},
   {{5,5,5},
     {-3,0,-3},
-    {-3,-3,-3}},
+    {-3,-3,-3},
+    size=3,
+  },
   {{-3,5,5},
     {-3,0,5},
-    {-3,-3,-3}},
+    {-3,-3,-3},
+    size=3,
+  },
   {{-3,-3,5},
     {-3,0,5},
-    {-3,-3,5}},
+    {-3,-3,5},
+    size=3,
+  },
   {{-3,-3,-3},
     {-3,0,5},
-    {-3,5,5}}
+    {-3,5,5},
+    size=3,
+  },  
+  {{-3,-3,-3},
+    {-3,0,-3},
+    {5,5,5},
+    size=3,
+  },
+  {{-3,-3,-3},
+    {5,0,-3},
+    {5,5,-3},
+    size=3,
+  },
+  {{5,-3,-3},
+    {5,0,-3},
+    {5,-3,-3},
+    size=3,
+  },
+  {{5,5,-3},
+    {5,0,-3},
+    {-3,-3,-3},
+    size=3,
+  },
 }
-kirschKernels.size = 3
-
---[[
-  create a 3x3 Kirsch edge magnitude kernel, orientation
-  of the filter is determined by the input.
-  1=N,2=NE,3=E,4=SE,5=S,6=SW,7=W,8=NW
---]]
-function kirsch(dir)
-  return kirschKernels[dir]
-end
 
 --[[
   create an nxn filter filled with 1s based on user input.
@@ -139,7 +145,7 @@ function sobelY()
 end
 
 return {
-  kirsch = kirsch,
+  kirsch = kirschKernels,
   oneFilter = oneFilter,
   meanFilter = meanFilter,
   smoothingFilter = smoothingFilter,

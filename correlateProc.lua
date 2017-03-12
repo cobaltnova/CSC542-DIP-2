@@ -6,6 +6,7 @@ require "ip"
 require "util"
 local il = require "il"
 local cke = require "createKernel"
+local table = require "table"
 
 --[[
   Run a correlation given a kernel and an image to run it on.
@@ -38,7 +39,7 @@ function cCorrelate(img, kernel)
       newImage:at(imrow,imcolumn).yiq[0] = clip(value, 0, 255)
     end
   end
-  -- return the correlated image.
+  -- return the correlated image. 
   return newImage
 end
 
@@ -111,9 +112,40 @@ function cSobelMag(img)
   return mag
 end
 
+function cKirschMagnitude(img)
+  --img = cSmoothFilter(img)
+  local newImg = image.flat(img.width, img.height, 0)
+
+  il.RGB2YIQ(img)  
+  il.RGB2YIQ(newImg)
+
+  local kernels = cke.kirsch
+  images = {}
+  for k, v in ipairs(kernels) do
+    table.insert(images, cCorrelate(img, v))
+  end
+  
+  local max
+  for r=1, newImg.height - 2 do
+    for c=1, newImg.width - 2 do
+      max = 0
+      for k, v in ipairs(images) do
+        if v:at(r,c).yiq[0] > max then
+          max = v:at(r,c).yiq[0]
+        end
+      end
+      
+      newImg:at(r,c).yiq[0] = max
+    end
+  end
+  il.YIQ2RGB(newImg)
+  return newImg
+end
+
 return {
   sharpen = cSharpenFilter,
   smooth = cSmoothFilter,
   sobel = cSobel,
-  sobelMag = cSobelMag
+  sobelMag = cSobelMag,
+  kirschMagnitude = cKirschMagnitude,
 }

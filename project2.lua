@@ -41,7 +41,8 @@ imageMenu("Weiss processes", {
     {"Weiss sharpen", il.sharpen},
     {"Weiss abs-sharpen", il.sharpenAbs},
     {"Weiss sobelMag", il.sobelMag},
-    {"Weiss sobel", il.sobel}
+    {"Weiss sobel", il.sobel},
+    {"Kirsch Edge Mag/Dir", il.kirsch},
   }
 )
 
@@ -66,7 +67,8 @@ imageMenu("Neighborhood processes", {
 
 imageMenu("Edge Detection", {
     {"Sobel", correlate.sobel},
-    {"SobelMag", correlate.sobelMag}
+    {"SobelMag", correlate.sobelMag},
+    {"Kirsch Edge Magnitude", correlate.kirschMagnitude},
   }
 )
 
