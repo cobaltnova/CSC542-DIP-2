@@ -99,9 +99,7 @@ function cSharpenFilter(img)
 end
 
 --[[
-  use the sobel gradient filter to determine edges in the image.
-  to match Weiss' example, return the original, the magnitude,
-  and the direction.
+  Use the sobel gradient filter to determine angle of the edges in the image.
 --]]
 function cSobelDir(img)
   local ang = image.flat(img.width, img.height, 0)
@@ -127,10 +125,8 @@ function cSobelDir(img)
 end
 
 --[[
-  use the sobel gradient filter to determine edges in the image,
+  Use the sobel gradient filter to determine edges in the image,
   returning only the magnitude of the edges.
-  to match Weiss' example, the image is not converted to grayscale
-  first, and the original is not returned.
 --]]
 function cSobelMag(img)
   local mag = image.flat(img.width, img.height, 0)
@@ -153,7 +149,6 @@ function cSobelMag(img)
 end
 
 function cKirschMagnitude(img)
-  --img = cSmoothFilter(img)
   local newImg = image.flat(img.width, img.height, 0)
 
   il.RGB2YIQ(img)  

@@ -119,7 +119,8 @@ function medianPlusFilter()
 end
 
 --[[
-  create a 3x3 sobel filter to find vertical edges.
+  Create a 3x3 sobel filter to find vertical edges.
+  The kernel is backwards since we are correlating instead of convolving
 --]]
 function sobelX()
   local filter = {
@@ -132,7 +133,9 @@ function sobelX()
 end
 
 --[[
-  create a 3x3 sobel filter to find horizontal edges.
+  Create a 3x3 sobel filter to find horizontal edges.
+  The kernel is backwards since we are correlating instead of convolving
+  The y kernel is backwards since y is inverted in images.
 --]]
 function sobelY()
   local filter = {
