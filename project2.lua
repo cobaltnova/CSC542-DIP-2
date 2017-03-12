@@ -38,6 +38,16 @@ imageMenu("Histogram processes", {
 imageMenu("Neighborhood processes", {
     {"NxN Median Filter", rankOrder.medianFilter,
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"NxN Mean Filter", rankOrder.meanFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"NxN Standard Deviation Filter", rankOrder.stdDevFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"NxN Min Filter", rankOrder.minFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"NxN Max Filter", rankOrder.maxFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
+    {"NxN Range Filter", rankOrder.rangeFilter,
+      {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
   }
 )
 

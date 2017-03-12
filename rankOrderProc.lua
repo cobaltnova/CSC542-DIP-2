@@ -14,6 +14,7 @@ require "ip"
 require "util"
 local table = require "table"
 local il = require "il"
+local kernel = require "createKernel"
 
 local function roRankOrderFilter(img, kernel, operation)
   local newImage = img:clone()
@@ -45,29 +46,113 @@ local function roRankOrderFilter(img, kernel, operation)
   return newImage
 end
 
+local function roMean(values)
+  local sum = 0
+  local count = 0
+  for k, v in ipairs(values) do
+    sum = v + sum
+    count = count + 1
+  end
+  return sum / count
+end
+
+local function roStdDev(values)
+  local sum = 0
+  local count = 0
+  local mean = roMean(values)
+  for k, v in ipairs(values) do
+    sum = sum + (v - mean) * (v - mean)
+    count = count + 1
+  end
+  return math.sqrt(sum / (count - 1))
+end
+
 local function roMedian(values)
   table.sort(values)
   return values[math.ceil(table.getn(values) / 2)]
 end
 
-local function roMedianFilter(img, n)
-  il.RGB2YIQ(img)
-  --TODO: Move this to createKernel
-  local kernel = {}
-  for i = 1, n do
-    table.insert(kernel, {})
-    for j = 1, n do
-      kernel[i][j] = 1
+local function roMin(values)
+  local min = 100000
+  for k, v in ipairs(values) do
+    if v < min then
+      min = v
     end
   end
-  kernel.size = n
-  
-  img=roRankOrderFilter(img, kernel, roMedian)
+  return min
+end
+
+local function roMax(values)
+  local max = -100000
+  for k, v in ipairs(values) do
+    if v > max then
+      max = v
+    end
+  end
+  return max
+end
+
+local function roRange(values)
+  local min = 100000
+  local max =-100000
+  for k, v in ipairs(values) do
+    if v > max then
+      max = v
+    end
+    if v < min then
+      min = v
+    end
+  end
+  return max - min
+end
+
+local function roMeanFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roMean)
   il.YIQ2RGB(img)
   return img
 end
 
+local function roStdDevFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roStdDev)
+  il.YIQ2RGB(img)
+  return img
+end
+
+local function roMedianFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roMedian)
+  il.YIQ2RGB(img)
+  return img
+end
+
+local function roMinFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roMin)
+  il.YIQ2RGB(img)
+  return img
+end
+
+local function roMaxFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roMax)
+  il.YIQ2RGB(img)
+  return img
+end
+
+local function roRangeFilter(img, n)
+  il.RGB2YIQ(img)  
+  img=roRankOrderFilter(img, kernel.oneFilter(n), roRange)
+  il.YIQ2RGB(img)
+  return img
+end
 
 return {
-  medianFilter=roMedianFilter
+  meanFilter=roMeanFilter,
+  stdDevFilter=roStdDevFilter,
+  medianFilter=roMedianFilter,
+  minFilter=roMinFilter,
+  maxFilter=roMaxFilter,
+  rangeFilter=roRangeFilter,
 }
