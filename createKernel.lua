@@ -32,6 +32,7 @@ local kirschKernels = {
     {-3,0,5},
     {-3,5,5}}
 }
+kirschKernels.size = 3
 
 --[[
   create a 3x3 Kirsch edge magnitude kernel, orientation
@@ -47,12 +48,13 @@ end
 --]]
 function oneFilter(n)
   local filter = {}
-  for i = 0, n do
+  for i = 1, n do
     filter[i] = {}
-    for j = 0, n do
+    for j = 1, n do
       filter[i][j] = 1
     end
   end
+  filter.size = n
   return filter
 end
 
@@ -67,6 +69,7 @@ function meanFilter(n)
       filter[i][j] = 1/(n*n)
     end
   end
+  filter.size = n
   return filter
 end
 
@@ -74,21 +77,12 @@ end
   create a 3x3 smoothing filter.
 --]]
 function smoothingFilter()
-  local filter = {}
-  filter[0] = {}
-  filter[1] = {}
-  filter[2] = {}
-  filter[0][0] = 1/16
-  filter[0][1] = 2/16
-  filter[0][2] = 1/16
-  filter[1][0] = 2/16
-  filter[1][1] = 4/16
-  filter[1][2] = 2/16
-  filter[2][0] = 1/16
-  filter[2][1] = 2/16
-  filter[2][2] = 1/16
-  filter.width = 3
-  filter.height = 3
+  local filter = {
+    {1/16,2/16,1/16},
+    {2/16,4/16,2/16},
+    {1/16,2/16,1/16}
+  }
+  filter.size = 3
   return filter
 end
 
@@ -96,21 +90,12 @@ end
   create a 3x3 sharpening filter.
 --]]
 function sharpeningFilter()
-  local filter = {}
-  filter[0] = {}
-  filter[1] = {}
-  filter[2] = {}
-  filter[0][0] = 0
-  filter[0][1] = -1
-  filter[0][2] = 0
-  filter[1][0] = -1
-  filter[1][1] = 5
-  filter[1][2] = -1
-  filter[2][0] = 0
-  filter[2][1] = -1
-  filter[2][2] = 0
-  filter.width = 3
-  filter.height = 3
+  local filter = {
+    {0,-1,0},
+    {-1,5,-1},
+    {0,-1,0}
+  }
+  filter.size = 3
   return filter
 end
 
@@ -118,21 +103,12 @@ end
   create a 3x3 plus-shaped median filter.
 --]]
 function medianPlusFilter()
-  local filter = {}
-  filter[0] = {}
-  filter[1] = {}
-  filter[2] = {}
-  filter[0][0] = 0
-  filter[0][1] = 1
-  filter[0][2] = 0
-  filter[1][0] = 1
-  filter[1][1] = 1
-  filter[1][2] = 1
-  filter[2][0] = 0
-  filter[2][1] = 1
-  filter[2][2] = 0
-  filter.width = 3
-  filter.height = 3
+  local filter = {
+    {0,1,0},
+    {1,1,1},
+    {0,1,0}
+  }
+  filter.size = 3
   return filter
 end
 

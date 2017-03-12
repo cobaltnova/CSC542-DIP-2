@@ -49,23 +49,32 @@ end
 --]]
 function correlate(img, kernel)
   local newImage = img:clone()
-  -- The bounds should prevent indexing past the edges of img.
-  for imrow = 0 + math.floor(kernel.height/2), img.height - 1 - math.floor(kernel.height/2) do
-    for imcolumn = 0 + math.floor(kernel.width/2), img.width - 1 - math.floor(kernel.width/2) do
-      -- map each pixel in newImage
-      local value = 0
-      for kernelrow = 0, (kernel.height - 1) do
-        for kernelcolumn = 0, (kernel.width - 1) do
-          -- value stores the intensity value that will be assigned to the pixel.
-          value = value + math.floor(
-            kernel[kernelrow][kernelcolumn]*
-            img:at(imrow-(math.floor(kernel.height/2)-kernelrow),imcolumn-(math.floor(kernel.width/2)-kernelcolumn)).yiq[0]
-          )
+  -- kernelCenter maps (1,2) -> 0, (3,4) -> 1, (5,6) -> 2 ...
+  -- this works if we choose upper left for the kernel center for even kernels
+  local kernelCenter = math.floor((kernel.size - 1)/ 2)
+
+  -- if the kernel is even sized, then looping stops 1 pixel early in both directions
+  local evenOddCorrection = if kernel.size % 2 == 0 then 1 else 0
+
+    -- The bounds should prevent indexing past the edges of img.
+    -- the -1 is added because images are zero indexed, and lua's for is inclusive
+    for imrow = kernelCenter, img.height - kernelCenter - evenOddCorrection - 1 do
+      for imcolumn = kernelCenter, img.width - kernelCenter - evenOddCorrection - 1 do
+        -- map each pixel in newImage
+        local value = 0
+        for kernelrow = 0, kernel.size - 1 do
+          for kernelcolumn = 0, kernel.size - 1 do
+            -- value stores the intensity value that will be assigned to the pixel.
+            -- kernel is 1 based but the image is not, the +1 adjusts for this.
+            value = value + math.floor(
+              kernel[kernelrow+1][kernelcolumn+1]*
+              img:at(imrow-kernelCenter+kernelrow,imcolumn-kernelCenter+kernelcolumn).yiq[0]
+            )
+          end
         end
+        newImage:at(imrow,imcolumn).yiq[0] = clip(value, 0, 255)
       end
-      newImage:at(imrow,imcolumn).yiq[0] = clip(value, 0, 255)
     end
+    -- return the correlated image.
+    return newImage
   end
-  -- return the correlated image.
-  return newImage
-end
