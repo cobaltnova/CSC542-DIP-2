@@ -3,6 +3,7 @@
   function of the util.lua file.
 --]]
 require "util"
+require "correlateProc"
 require "ip"
 local il = require "il"
 local cim = require "createImage"
