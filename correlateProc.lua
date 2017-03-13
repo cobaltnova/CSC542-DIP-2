@@ -53,7 +53,7 @@ function cCorrelateHDR(img, kernel)
   for i=0, img.height - 1 do
     newImage[i] = {}
   end
-  
+
   -- kernelCenter maps (1,2) -> 0, (3,4) -> 1, (5,6) -> 2 ...
   -- this works if we choose upper left for the kernel center for even kernels
   local kernelCenter = math.floor((kernel.size - 1)/ 2)
@@ -116,7 +116,7 @@ function cSobelDir(img)
       if (angle < 0) then
         angle = angle + 2 * math.pi
       end
-      
+
       ang:at(r,c).yiq[0]=clip((255 / (2 * math.pi)) * angle, 0, 255)      
     end
   end
@@ -151,15 +151,16 @@ end
 function cKirschMagnitude(img)
   local newImg = image.flat(img.width, img.height, 0)
 
-  il.RGB2YIQ(img)  
+  il.RGB2YIQ(img)
   il.RGB2YIQ(newImg)
 
   local kernels = cke.kirsch
-  images = {}
+  --changed this to a local
+  local images = {}
   for k, v in ipairs(kernels) do
     table.insert(images, cCorrelate(img, v))
   end
-  
+
   local max
   for r=1, newImg.height - 2 do
     for c=1, newImg.width - 2 do
@@ -169,12 +170,38 @@ function cKirschMagnitude(img)
           max = v:at(r,c).yiq[0]
         end
       end
-      
+
       newImg:at(r,c).yiq[0] = max
     end
   end
   il.YIQ2RGB(newImg)
   return newImg
+end
+
+--[[
+  apply a 3x3 embossing filter to the image.
+--]]
+function cEmboss(img)
+  return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.embossFilter()))
+end
+
+--[[
+  apply a smoothing filter to the image, then apply the laplacian
+  filter to the image. This will produce an image of edges from
+  the smoothed image.
+--]]
+function cLaplacian(img)
+  il.RGB2YIQ(img)
+  -- the 3x3 smoothing filter is approximately Gaussian
+  img = cCorrelate(img, cke.smoothingFilter())
+  img = cCorrelate(img, cke.laplacianFilter())
+  img:mapPixels(
+    function (y,i,q)
+      return clip(y+128,0,255),i,q 
+    end
+  )
+  il.YIQ2RGB(img)
+  return il.stretch(img, "yiq")
 end
 
 return {
@@ -183,4 +210,6 @@ return {
   sobelDir = cSobelDir,
   sobelMag = cSobelMag,
   kirschMagnitude = cKirschMagnitude,
+  emboss = cEmboss,
+  laplacian = cLaplacian
 }
