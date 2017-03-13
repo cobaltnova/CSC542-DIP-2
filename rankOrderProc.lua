@@ -46,6 +46,28 @@ local function roRankOrderFilter(img, kernel, operation)
   return newImage
 end
 
+local function roOutOfRangeMean(threshold)
+  return function(values)
+    local n = table.getn(values)
+    local midPoint = math.ceil(n / 2)
+    local sum = 0
+    local count = 0
+    for i=1, midPoint - 1 do
+      sum = values[i] + sum
+      count = count + 1
+    end
+    for i=midPoint + 1, n do
+      sum = values[i] + sum
+      count = count + 1
+    end
+    local avg = sum / count
+    if (math.abs(avg - values[midPoint]) > threshold) then
+      return avg
+    end
+    return values[midPoint]
+  end   
+end
+
 local function roMean(values)
   local sum = 0
   local count = 0
@@ -106,6 +128,13 @@ local function roRange(values)
   return max - min
 end
 
+local function roOutOfRangeFilter(img, threshold)
+  il.RGB2YIQ(img)
+  img=roRankOrderFilter(img, kernel.oneFilter(3), roOutOfRangeMean(threshold))
+  il.YIQ2RGB(img)
+  return img
+end
+
 local function roMeanFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMean)
@@ -157,6 +186,7 @@ end
 
 return {
   meanFilter=roMeanFilter,
+  outOfRangeFilter=roOutOfRangeFilter,
   stdDevFilter=roStdDevFilter,
   medianFilter=roMedianFilter,
   medianPlusFilter=roMedianPlusFilter,

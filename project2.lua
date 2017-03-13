@@ -47,12 +47,16 @@ imageMenu("Weiss processes", {
     {"Weiss posterize", il.posterize, {{name = "n", type = "number", displaytype = "spin", default = 8},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
     {"Weiss brighten", il.brighten, {{name = "amount", type = "number", displaytype = "spin", default = 50},{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "yuv", "ihs"}, default = "yiq"}}},
     {"Weiss emboss", il.emboss},
-    {"Weiss laplacian", il.laplacian}
+    {"Weiss laplacian", il.laplacian},
+    {"Weiss Noise Clean", il.noiseClean,
+      {{name = "threshold", type = "number", displaytype = "slider", default = 64, min = 0, max = 256}}},
   }
 )
 
 imageMenu("Neighborhood processes", {
     {"Median Plus Filter", rankOrder.medianPlusFilter},
+    {"Out Of Range Filter", rankOrder.outOfRangeFilter, 
+      {{name = "threshold", type = "number", displaytype="slider", default = 64, min = 0, max = 255}}},
     {"NxN Median Filter", rankOrder.medianFilter,
       {{name = "n", type = "number", displaytype = "spin", default = 3, min = 2, max = 255}}},
     {"NxN Mean Filter", rankOrder.meanFilter,
