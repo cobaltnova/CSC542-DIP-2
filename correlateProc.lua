@@ -182,7 +182,20 @@ end
   apply a 3x3 embossing filter to the image.
 --]]
 function cEmboss(img)
-  return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.embossFilter()))
+  il.RGB2YIQ(img)
+  img:mapPixels(
+    function(y, i, q)
+      return clip(y - 128), i, q
+    end
+  )
+  results = cCorrelateHDR(img, cke.embossFilter())
+  for r=1, img.height - 2 do
+    for c=1, img.width - 2 do
+      img:at(r, c).yiq[0] = clip(results[r][c] + 128)
+    end
+  end
+  il.YIQ2RGB(img)
+  return img
 end
 
 --[[

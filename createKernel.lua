@@ -152,9 +152,9 @@ end
 --]]
 function embossFilter()
   local filter = {
-    {-1,-1,0},
-    {-1,0,1},
-    {0,1,1}
+    {1,1,0},
+    {1,0,-1},
+    {0,-1,-1}
   }
   filter.size = 3
   return filter

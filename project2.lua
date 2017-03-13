@@ -50,6 +50,10 @@ imageMenu("Weiss processes", {
     {"Weiss laplacian", il.laplacian},
     {"Weiss Noise Clean", il.noiseClean,
       {{name = "threshold", type = "number", displaytype = "slider", default = 64, min = 0, max = 256}}},
+    {"Weiss Std Dev", il.stdDev,
+      {{name = "width", type = "number", displaytype = "spin", default = 3, min = 0, max = 65}}},
+    {"Weiss Minimum", il.minimum},
+    {"Weiss Maximum", il.maximum},
   }
 )
 
