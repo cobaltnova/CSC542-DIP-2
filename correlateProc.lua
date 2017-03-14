@@ -179,6 +179,46 @@ function cKirschMagnitude(img)
 end
 
 --[[
+  Returns the direction of the gradient within 22.5 degrees of
+  the nearest cardinal or inter-cardinal direction as an
+  intensity image where intensities map to directions.
+--]]
+function cKirschDirection(img)
+  local newImg = image.flat(img.width, img.height, 0)
+
+  il.RGB2YIQ(img)
+  il.RGB2YIQ(newImg)
+
+  local kernels = cke.kirsch
+  local images = {}
+  for k, v in ipairs(kernels) do
+    table.insert(images, cCorrelate(img, v))
+  end
+
+  local max
+  local maxIndex
+  for r=1, newImg.height - 2 do
+    for c=1, newImg.width - 2 do
+      maxIndex = 0
+      max = 0
+      for k, v in ipairs(images) do
+        if v:at(r,c).yiq[0] > max then
+          maxIndex = k
+          max = v:at(r,c).yiq[0]
+        end
+      end
+      if (max == 0 ) then 
+        newImg:at(r,c).yiq[0] = 0
+      else
+        newImg:at(r,c).yiq[0] = (maxIndex - 1)*(255/7)
+      end
+    end
+  end
+  il.YIQ2RGB(newImg)
+  return newImg
+end
+
+--[[
   apply a 3x3 embossing filter to the image.
 --]]
 function cEmboss(img)
@@ -223,6 +263,7 @@ return {
   sobelDir = cSobelDir,
   sobelMag = cSobelMag,
   kirschMagnitude = cKirschMagnitude,
+  kirschDirection = cKirschDirection,
   emboss = cEmboss,
   laplacian = cLaplacian
 }

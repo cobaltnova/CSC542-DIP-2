@@ -83,6 +83,7 @@ imageMenu("Edge Detection", {
     {"Sobel Direction", correlate.sobelDir},
     {"Sobel Magnitude", correlate.sobelMag},
     {"Kirsch Edge Magnitude", correlate.kirschMagnitude},
+    {"Kirsch Edge Direction", correlate.kirschDirection},
     {"Laplacian Edge Magnitude", correlate.laplacian}
   }
 )
