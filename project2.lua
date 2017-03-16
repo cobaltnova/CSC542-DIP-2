@@ -20,12 +20,18 @@ local correlate = require "correlateProc"
 -- menus --
 -----------
 
+--[[
+  point processes from the Lua IP library.
+--]]
 imageMenu("Point processes", {
     {"Grayscale YIQ\tCtrl-M", il.grayscaleYIQ, hotkey = "C-M"},
     {"Posterize", il.posterize, {{name = "levels", type = "number", displaytype = "spin", default = 4, min = 2, max = 64}, cmarg1}},
   }
 )
 
+--[[
+  histogram processes from the Lua IP library.
+--]]
 imageMenu("Histogram processes", {
     {"Display Histogram", il.showHistogram,
       {{name = "color model", type = "string", displaytype = "combo", choices = {"yiq", "rgb"}, default = "yiq"}}},
@@ -37,6 +43,10 @@ imageMenu("Histogram processes", {
   }
 )
 
+--[[
+  Dr. Weiss' implementation of the processes
+  implemented in this project.
+--]]
 imageMenu("Weiss processes", {
     {"Weiss smooth", il.smooth},
     {"Weiss sharpen", il.sharpen},
@@ -57,6 +67,10 @@ imageMenu("Weiss processes", {
   }
 )
 
+--[[
+  calls to our implementations of the neighborhood
+  processes required by the project assignment.
+--]]
 imageMenu("Neighborhood processes", {
     {"Median Plus Filter", rankOrder.medianPlusFilter},
     {"Out Of Range Filter", rankOrder.outOfRangeFilter, 
@@ -79,6 +93,12 @@ imageMenu("Neighborhood processes", {
   }
 )
 
+--[[
+  calls to our implementations of the edge detection
+  processes required by the project assignment. the
+  sobel and kirsch processes have been split into their
+  magnitude and direction components.
+--]]
 imageMenu("Edge Detection", {
     {"Sobel Direction", correlate.sobelDir},
     {"Sobel Magnitude", correlate.sobelMag},
@@ -88,12 +108,18 @@ imageMenu("Edge Detection", {
   }
 )
 
+--[[
+  call to the Lua IP binary thresholding function.
+--]]
 imageMenu("Segment", {
     {"Binary Threshold", il.threshold,
       {{name = "threshold", type = "number", displaytype = "slider", default = 128, min = 0, max = 255}}},
   }
 )
 
+--[[
+  call on Lua IP functions to introduce impulse and Gaussian noise.
+--]]
 imageMenu("Misc.", {
     {"Impulse Noise", il.impulseNoise,
       {{name = "probability", type = "number", displaytype = "slider", default = 64, min = 0, max = 1000}}},
@@ -102,6 +128,9 @@ imageMenu("Misc.", {
   }
 )
 
+--[[
+  display a short help dialog.
+--]]
 imageMenu("Help/About",
   {
     { "Help", viz.imageMessage( "Help", "- To load an image file, click 'file' then 'open' and navigate to your image.\n"

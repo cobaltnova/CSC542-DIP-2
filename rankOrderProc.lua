@@ -16,6 +16,11 @@ local table = require "table"
 local il = require "il"
 local kernel = require "createKernel"
 
+--[[
+  Generate an ordered list of the pixels that lie under the
+  kernel. Pass this list of pixel values to an operation
+  which will return the value of the "center" pixel.
+--]]
 local function roRankOrderFilter(img, kernel, operation)
   local newImage = img:clone()
   -- kernelCenter maps (1,2) -> 0, (3,4) -> 1, (5,6) -> 2 ...
@@ -46,6 +51,12 @@ local function roRankOrderFilter(img, kernel, operation)
   return newImage
 end
 
+--[[
+  if the mean of the pixels in a neighborhood
+  is more than a given threshold from the value of
+  the midpoint, return the mean of the pixels.
+  otherwise, return the value of the midpoint.
+--]]
 local function roOutOfRangeMean(threshold)
   return function(values)
     local n = table.getn(values)
@@ -68,6 +79,10 @@ local function roOutOfRangeMean(threshold)
   end   
 end
 
+--[[
+  return the mean of the values of
+  the pixels in a neighborhood.
+--]]
 local function roMean(values)
   local sum = 0
   local count = 0
@@ -78,6 +93,10 @@ local function roMean(values)
   return sum / count
 end
 
+--[[
+  return the standard deviation of the
+  values of a neighborhood of pixels.
+--]]
 local function roStdDev(values)
   local sum = 0
   local count = 0
@@ -89,11 +108,19 @@ local function roStdDev(values)
   return math.sqrt(sum / (count - 1))
 end
 
+--[[
+  sort the list of pixel values, and return
+  the median value.
+--]]
 local function roMedian(values)
   table.sort(values)
   return values[math.ceil(table.getn(values) / 2)]
 end
 
+--[[
+  given a list of pixel values, return
+  the minimal value.
+--]]
 local function roMin(values)
   local min = 100000
   for k, v in ipairs(values) do
@@ -104,6 +131,10 @@ local function roMin(values)
   return min
 end
 
+--[[
+  given a list of pixel values, return
+  the maximal value.
+--]]
 local function roMax(values)
   local max = -100000
   for k, v in ipairs(values) do
@@ -114,6 +145,11 @@ local function roMax(values)
   return max
 end
 
+--[[
+  return the difference between the
+  minimal value in the neighborhood
+  and the maximal value.
+--]]
 local function roRange(values)
   local min = 100000
   local max =-100000
@@ -128,6 +164,11 @@ local function roRange(values)
   return max - min
 end
 
+--[[
+  filter the image by replacing pixels that deviate from the mean
+  of their neighbors by more than a user provided threshold with
+  the mean of their neighbors.
+--]]
 local function roOutOfRangeFilter(img, threshold)
   il.RGB2YIQ(img)
   img=roRankOrderFilter(img, kernel.oneFilter(3), roOutOfRangeMean(threshold))
@@ -135,6 +176,10 @@ local function roOutOfRangeFilter(img, threshold)
   return img
 end
 
+--[[
+  replace pixels in the image with the mean value of
+  themselves and their neighbors.
+--]]
 local function roMeanFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMean)
@@ -142,6 +187,10 @@ local function roMeanFilter(img, n)
   return img
 end
 
+--[[
+  replace the pixels in the image with the value of the
+  standard deviation of their neighborhoods.
+--]]
 local function roStdDevFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roStdDev)
@@ -149,6 +198,10 @@ local function roStdDevFilter(img, n)
   return img
 end
 
+--[[
+  replace each pixel with the value of the median
+  pixel in its neighborhood.
+--]]
 local function roMedianFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMedian)
@@ -156,6 +209,10 @@ local function roMedianFilter(img, n)
   return img
 end
 
+--[[
+  replace each pixel with the value of the median
+  pixel an a plus-shaped neighborhood.
+--]]
 local function roMedianPlusFilter(img)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.medianPlusFilter(), roMedian)
@@ -163,6 +220,10 @@ local function roMedianPlusFilter(img)
   return img
 end
 
+--[[
+  replace each pixel in the image with the
+  minimal value in its neighborhood.
+--]]
 local function roMinFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMin)
@@ -170,6 +231,10 @@ local function roMinFilter(img, n)
   return img
 end
 
+--[[
+  replace each pixel in the image with the
+  maximal value in its neighborhood.
+--]]
 local function roMaxFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roMax)
@@ -177,6 +242,11 @@ local function roMaxFilter(img, n)
   return img
 end
 
+--[[
+  replace each pixel by the difference between
+  the maximal pixel in the neighborhood and
+  the minimal pixel in the neighborhood.
+--]]
 local function roRangeFilter(img, n)
   il.RGB2YIQ(img)  
   img=roRankOrderFilter(img, kernel.oneFilter(n), roRange)

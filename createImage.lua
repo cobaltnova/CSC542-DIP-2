@@ -1,7 +1,16 @@
 --[[
-  This file contains functions that will programmatically
-  create test images using the lip image.flat function.
+
+  * * * * createKernel.lua * * * *
+
+functions that programmatically create test
+images.
+
+Authors: Benjamin Garcia and Logan Lembke
+Class: CSC442/542 Digital Image Processing
+Date: Spring 2017
+
 --]]
+
 require "ip"
 local viz = require "visual"
 local il = require "il"

@@ -1,6 +1,14 @@
 --[[
-  This file contains definitions for correlation based
-  processes, as well as the definition for the correlate function.
+
+  * * * * correlateProc.lua * * * *
+
+correlation processes implementation. Correlation
+was sufficient for these processes due to symmetric kernels.
+
+Authors: Logan Lembke and Benjamin Garcia
+Class: CSC442/542 Digital Image Processing
+Date: Spring 2017
+
 --]]
 require "ip"
 require "util"
@@ -85,21 +93,29 @@ function cCorrelateHDR(img, kernel)
 end
 
 --[[
-  smooth the image using a 3x3 smoothing filter.
+  generate an approximately gaussian smoothing filter, and convert
+  the input image to yiq. Run a correlation on the image using the
+  smoothing filter and reconvert to rgb.
 --]]
 function cSmoothFilter(img)
   return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.smoothingFilter()))
 end
 
 --[[
-  sharpen the image using a 3x3 sharpening filter.
+  generate a 3x3 sharpening filter, and convert the input image to
+  yiq. Run a correlation on the image using the sharpening filter
+  and reconvert to rgb.
 --]]
 function cSharpenFilter(img)
   return il.YIQ2RGB(cCorrelate(il.RGB2YIQ(img), cke.sharpeningFilter()))
 end
 
 --[[
-  Use the sobel gradient filter to determine angle of the edges in the image.
+  create a blank image with the dimensions of the original
+  image. Then, create X and Y direction sobel kernels to
+  correlate with the input image after conversion to yiq.
+  With gradient magnitude information, take the
+  arctangent of the intensities and rescale from 0 to 255.
 --]]
 function cSobelDir(img)
   local ang = image.flat(img.width, img.height, 0)
@@ -125,8 +141,13 @@ function cSobelDir(img)
 end
 
 --[[
-  Use the sobel gradient filter to determine edges in the image,
-  returning only the magnitude of the edges.
+  create a blank image with the dimensions of the original
+  image. Then, create X and Y direction sobel kernels to
+  correlate with the input image after conversion to yiq.
+  With gradient magnitude information, take the
+  square root of the sum of the squares of the
+  magnitudes to retrieve the edges from both
+  X and Y directions.
 --]]
 function cSobelMag(img)
   local mag = image.flat(img.width, img.height, 0)
@@ -148,6 +169,12 @@ function cSobelMag(img)
   return mag
 end
 
+--[[
+  Using eight rotations of a 3x3 kirsch edge detection
+  kernel, compare the strengths of the kernel matches in
+  each pixel's neighborhood. record the max intensity
+  returned from correlating each kernel at each pixel.
+--]]
 function cKirschMagnitude(img)
   local newImg = image.flat(img.width, img.height, 0)
 
@@ -182,6 +209,10 @@ end
   Returns the direction of the gradient within 22.5 degrees of
   the nearest cardinal or inter-cardinal direction as an
   intensity image where intensities map to directions.
+  this is accomplished by recording the direction of the
+  max intensity obtained from correlating the kirsch
+  kernels, and then rescaling the value indicating direction
+  from 0 to 255.
 --]]
 function cKirschDirection(img)
   local newImg = image.flat(img.width, img.height, 0)
@@ -219,7 +250,11 @@ function cKirschDirection(img)
 end
 
 --[[
-  apply a 3x3 embossing filter to the image.
+  convert the input image to yiq and scale intensities
+  down by 128, then create a 3x3 embossing filter.
+  perform a correlation on the image with this filter,
+  and rescale outputs by 128 again to obtain a flat
+  background.
 --]]
 function cEmboss(img)
   il.RGB2YIQ(img)
@@ -241,7 +276,7 @@ end
 --[[
   apply a smoothing filter to the image, then apply the laplacian
   filter to the image. This will produce an image of edges from
-  the smoothed image.
+  the smoothed image. rescale by 128 afterwards.
 --]]
 function cLaplacian(img)
   il.RGB2YIQ(img)

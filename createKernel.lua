@@ -1,6 +1,14 @@
 --[[
-  This file contains functions that will programmatically
-  create kernels for neighborhood operations.
+
+  * * * * createKernel.lua * * * *
+
+functions that programmatically create kernels
+for neighborhood operations.
+
+Authors: Benjamin Garcia and Logan Lembke
+Class: CSC442/542 Digital Image Processing
+Date: Spring 2017
+
 --]]
 
 --[[
